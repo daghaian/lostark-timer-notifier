@@ -2,10 +2,18 @@ import requests
 import lxml.html
 import re
 import json
+import datetime
+import pytz
 
 
 class Event:
     def __init__(self, event_start, event_name, event_category, event_icon, event_ilevel=None, event_end=None):
+
+        # convert start time to epoch
+        hour, minute = event_start.split(":")
+        test = datetime.datetime(datetime.today(
+        ).year, int(month), int(day), int(hour), int(minute), 0, 0, pytz.timezone('US/Mountain'))
+        print(test.timestamp())
         self.event_start = event_start
         self.event_name = event_name
         self.event_category = event_category
@@ -50,6 +58,7 @@ if r.status_code == 200:
                     category_name = None
                     event_start = None
                     event_end = None
+                    event_time = None
                     event_icon = None
                     event_ilevel = None
                     event_name = None
@@ -59,7 +68,7 @@ if r.status_code == 200:
                         for time in events:
                             if "Proving Ground" not in calendar_events[eventMetadata][0]:
                                 category_name = calendar_msgs[category][0]
-                                event_start = time
+                                event_time = time
                                 event_icon = calendar_events[eventMetadata][1]
                                 event_ilevel = None
                                 event_name = calendar_events[eventMetadata][0]
@@ -73,7 +82,7 @@ if r.status_code == 200:
                             for time in event:
                                 if "Proving Ground" not in calendar_events[eventID][0]:
                                     category_name = calendar_msgs[category][0]
-                                    event_start = time
+                                    event_time = time
                                     event_icon = calendar_events[eventID][1]
                                     event_ilevel = eventMetadata
                                     event_name = calendar_events[eventID][0]
@@ -81,6 +90,12 @@ if r.status_code == 200:
                                     print("Category ID: {} Category Name: {} Month: {} Day: {} Event ID: {} Event Name: {} Event Time: {} Item Level: {}".format(
                                         category, calendar_msgs[category][0], month, day, eventID, calendar_events[eventID][0], time, eventMetadata))
                                     continue
+
+                    if "-" in event_time:
+                        event_start, event_end = event_time.split("-")
+                    else:
+                        event_start = event_time
                     eventList.append(Event(event_start=event_start, event_name=event_name, event_category=category_name,
                                      event_icon=event_icon, event_ilevel=event_ilevel, event_end=event_end))
+
     # #         # Check on interval
