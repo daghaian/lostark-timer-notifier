@@ -79,8 +79,12 @@ while True:
     if len(eventsIn15Minutes) > 0:
 
         for event in eventsIn15Minutes:
-            print("{} - will occur in {}".format(event.event_name,
-                                                 event.event_start-myCurrentTime))
+            remainingTime = event.event_start-myCurrentTime
+            hours,remainder = divmod(remainingTime.seconds,3600)
+            minutes,second = divmod(remainder,60)
+
+            print("{} - will occur in {} minute(s) and {} second(s)".format(event.event_name,
+                                                 minutes,second))
     else:
         print("No events happening in the next 15 minutes")
     time.sleep(60)
