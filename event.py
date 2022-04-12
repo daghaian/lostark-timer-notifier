@@ -4,6 +4,7 @@ import json
 import pytz
 import datetime
 import re
+from util import *
 
 EVENT_CALENDAR_URL = "https://lostarkcodex.com/us/eventcalendar/"
 
@@ -86,10 +87,12 @@ class EventList:
     def enqueueEvents(self, events):
         for e in events:
             # Only add event if not encountered before
-            hashed = e.hashEvent()
-            if hashed not in self._eventHashList:
-                self._eventHashList[hashed] = True
-                self._eventList.append(e)
+            myCurrentTime = getCurrentTime()
+            if myCurrentTime < e.event_start:
+                hashed = e.hashEvent()
+                if hashed not in self._eventHashList:
+                    self._eventHashList[hashed] = True
+                    self._eventList.append(e)
         # sort the list by event_start
         self._eventList = sorted(self._eventList, key=lambda x: x.event_start)
 

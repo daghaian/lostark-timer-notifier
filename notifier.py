@@ -3,6 +3,7 @@ import datetime
 import time
 from event import *
 from discord import *
+from util import *
 import pickle
 import schedule
 
@@ -39,7 +40,7 @@ finalList = eventList.getEventList()
 
 # dispatch thread to dump state every 30 minutes
 schedule.every(15).minutes.do(
-    dumpEventState, event_file="event.txt", event_data=finalList)
+    dumpEventState, event_file="events", event_data=finalList)
 
 
 while True:
@@ -47,7 +48,7 @@ while True:
     schedule.run_pending()
 
     # extract current time
-    myCurrentTime = datetime.datetime.now(pytz.timezone('America/Los_Angeles'))
+    myCurrentTime = getCurrentTime()
 
     # identify all events occuring in the next 15 minutes that have not already been notified
     eventsIn15Minutes = [e for e in finalList if (myCurrentTime < e.event_start) and (
