@@ -9,10 +9,18 @@ EVENT_CALENDAR_URL = "https://lostarkcodex.com/us/eventcalendar/"
 
 
 class Event:
-    def __init__(self, month, day, event_id, event_start, event_name, event_category, event_icon, event_ilevel=None, event_end=None):
-        # convert start time to epoch
-        hour, minute = event_start.split(":")
+    def __init__(self, month, day, event_id, event_time, event_name, event_category, event_icon, event_ilevel=None):
+        
+        
+        if "-" in event_time:
+            self.event_start, self.event_end = event_time.split(
+                "-")
+        else:
+            self.event_start = event_time
+            self.event_end = None
 
+        # parse the start time relative to our timezone (PST)
+        hour, minute = self.event_start.split(":")
         et = pytz.timezone('America/New_York')
         pt = pytz.timezone('America/Los_Angeles')
 
@@ -37,9 +45,11 @@ class Event:
         self.event_category = event_category
         self.event_icon = event_icon
         self.event_ilevel = event_ilevel if event_ilevel is not None else 0
-
-        if event_end is not None:
-            hour, minute = event_end.split(":")
+        
+        
+        if self.event_end is not None:
+            # parse the end time relative to our timezone (PST)
+            hour, minute = self.event_end.split(":")
 
             end_server_time = et.normalize(et.localize(datetime.datetime(datetime.datetime.today(
             ).year, int(month), int(day), int(hour), int(minute), 0, 0,)))

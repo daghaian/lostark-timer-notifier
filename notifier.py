@@ -37,14 +37,8 @@ for category, categoryEvents in calendar_data.items():
                             event_ilevel = None
                             event_name = calendar_events[eventMetadata][0]
 
-                            if "-" in event_time:
-                                event_start, event_end = event_time.split(
-                                    "-")
-                            else:
-                                event_start = event_time
-
                             newEvent = Event(
-                                month, day, eventMetadata, event_start, event_name, category_name, event_icon, event_ilevel, event_end)
+                                month, day, eventMetadata, event_time, event_name, category_name, event_icon, event_ilevel)
                             eventList.enqueueEvent(newEvent)
 
                 # Else, we have an item level requirement for the events in this category
@@ -58,15 +52,11 @@ for category, categoryEvents in calendar_data.items():
                                 event_ilevel = eventMetadata
                                 event_name = calendar_events[eventID][0]
 
-                                if "-" in event_time:
-                                    event_start, event_end = event_time.split(
-                                        "-")
-                                else:
-                                    event_start = event_time
-
                                 newEvent = Event(
-                                    month, day,  eventID, event_start, event_name, category_name, event_icon, event_ilevel, event_end)
+                                    month, day,  eventID, event_time, event_name, category_name, event_icon, event_ilevel)
                                 eventList.enqueueEvent(newEvent)
+
+
 
 finalList = eventList.getEventList()
 finalList = sorted(finalList, key=lambda x: x.event_start)
