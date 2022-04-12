@@ -70,9 +70,10 @@ for category, categoryEvents in calendar_data.items():
 
 finalList = eventList.getEventList()
 finalList = sorted(finalList, key=lambda x: x.event_start)
-myCurrentTime = datetime.datetime.now(pytz.timezone('America/Los_Angeles'))
+
 
 while True:
+    myCurrentTime = datetime.datetime.now(pytz.timezone('America/Los_Angeles'))
     eventsIn15Minutes = [e for e in finalList if (myCurrentTime < e.event_start) and (
         e.event_start - myCurrentTime) <= datetime.timedelta(minutes=15)]
     if len(eventsIn15Minutes) > 0:
